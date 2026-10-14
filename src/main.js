@@ -33,19 +33,34 @@ let fps = 0;
 
 const ONE_SECOND = 1000;
 
+const STEP = 1 / 60;
+
+let accumulator = 0;
+let stepCount = 0;
+let stepsPerSecond = 0;
+
 function frame(now) {
     frameCount++;
 
     const frameTime = lastTime === null ? 0 : now - lastTime;
     lastTime = now;
 
+    accumulator += Math.min(frameTime / ONE_SECOND, 0.25);
+
+    while (accumulator >= STEP) {
+        stepCount++;
+        accumulator -= STEP;
+    }
+
     elapsedTime += frameTime;
 
     if (elapsedTime >= ONE_SECOND) {
         fps = frameCount * ONE_SECOND / elapsedTime;
-        
+        stepsPerSecond = stepCount * ONE_SECOND / elapsedTime;
+
         frameCount = 0;
         elapsedTime = 0;
+        stepCount = 0;
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -55,6 +70,7 @@ function frame(now) {
     ctx.font = '18px sans-serif';
     ctx.fillText(`Frame: ${frameTime.toFixed(2)} ms`, 10, 25);
     ctx.fillText(`FPS: ${fps.toFixed(2)}`, 10, 50);
+    ctx.fillText(`Steps/s: ${stepsPerSecond.toFixed(0)}`, 10, 75);
 
     requestAnimationFrame(frame);
 }
