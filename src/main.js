@@ -41,6 +41,11 @@ function simulate() {
         tank.x = -tank.width;
         previousX = tank.x;
     }
+
+    if (tank.x + tank.width < 0) {
+        tank.x = canvas.width;
+        previousX = tank.x;
+    }
 }
 
 function frame(now) {
