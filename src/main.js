@@ -14,6 +14,7 @@ export const tank = {
     width: 60,
     height: 40,
     speed: 120,
+    angle: 0,
 };
 
 let previousX = tank.x;

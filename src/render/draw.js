@@ -1,15 +1,28 @@
 export function drawTank(ctx, tank, x) {
-    //x isn`t straight tank coordinate, it`s interpolated coord
+    ctx.save();
+
+    ctx.translate(x + tank.width / 2, tank.y + tank.height / 2);
+    ctx.rotate(tank.angle);
+
+    const left = -tank.width / 2;
+    const top = -tank.height / 2;
+
+    // Гусеницы
     ctx.fillStyle = '#333333';
-    ctx.fillRect(x, tank.y - 8, tank.width, 10);
-    ctx.fillRect(x, tank.y + tank.height - 2, tank.width, 10);
+    ctx.fillRect(left, top - 8, tank.width, 10);
+    ctx.fillRect(left, top + tank.height - 2, tank.width, 10);
 
+    // Корпус
     ctx.fillStyle = 'green';
-    ctx.fillRect(x, tank.y, tank.width, tank.height);
+    ctx.fillRect(left, top, tank.width, tank.height);
 
+    // Башня
     ctx.fillStyle = 'darkgreen';
-    ctx.fillRect(x + 20, tank.y + 10, 20, 20);
+    ctx.fillRect(-10, -10, 20, 20);
 
+    // Ствол
     ctx.fillStyle = 'black';
-    ctx.fillRect(x + 35, tank.y + 17, 40, 6);
+    ctx.fillRect(5, -3, 40, 6);
+
+    ctx.restore();
 }
