@@ -7,6 +7,8 @@ export function integrate(tank, input, dt) {
         tank.angle += tank.turnSpeed * dt;
     }
 
+    tank.angle = Math.atan2(Math.sin(tank.angle), Math.cos(tank.angle));
+
     tank.thrust = 0;
 
     if (input.isDown('ArrowUp')) {

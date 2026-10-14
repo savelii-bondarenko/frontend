@@ -1,4 +1,4 @@
-import { drawTank, drawGrid } from './render/draw.js';
+import { drawTank, drawGrid, lerpAngle } from './render/draw.js';
 import { integrate } from './sim/tank.js';
 import { createInput } from './input.js';
 import { wrapTank } from './sim/arena.js';
@@ -64,7 +64,7 @@ function render(alpha, stats) {
 
     const renderX = previousX + (tank.x - previousX) * alpha;
     const renderY = previousY + (tank.y - previousY) * alpha;
-    const renderAngle = previousAngle + (tank.angle - previousAngle) * alpha;
+    const renderAngle = lerpAngle(previousAngle, tank.angle, alpha);
 
     drawTank(ctx, tank, renderX, renderY, renderAngle);
 

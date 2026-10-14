@@ -52,3 +52,14 @@ export function drawGrid(ctx, width, height) {
     ctx.stroke();
     ctx.restore();
 }
+
+export function lerpAngle(previous, current, alpha) {
+    const difference = current - previous;
+
+    const shortestDifference = Math.atan2(
+        Math.sin(difference),
+        Math.cos(difference),
+    );
+
+    return previous + shortestDifference * alpha;
+}
