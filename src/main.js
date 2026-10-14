@@ -19,6 +19,7 @@ export const tank = {
 };
 
 let previousX = tank.x;
+let previousY = tank.y;
 let previousAngle = tank.angle;
 
 let lastTime = null;
@@ -37,6 +38,7 @@ let stepsPerSecond = 0;
 
 function simulate() {
     previousX = tank.x;
+    previousY = tank.y;
     previousAngle = tank.angle;
 
     integrate(tank, input, STEP);
@@ -49,6 +51,16 @@ function simulate() {
     if (tank.x + tank.width < 0) {
         tank.x = canvas.width;
         previousX = tank.x;
+    }
+
+    if (tank.y > canvas.height) {
+        tank.y = -tank.height;
+        previousY = tank.y;
+    }
+
+    if (tank.y + tank.height < 0) {
+        tank.y = canvas.height;
+        previousY = tank.y;
     }
 }
 
@@ -82,9 +94,10 @@ function frame(now) {
 
     const alpha = accumulator / STEP;
     const renderX = previousX + (tank.x - previousX) * alpha;
+    const renderY = previousY + (tank.y - previousY) * alpha;
     const renderAngle = previousAngle + (tank.angle - previousAngle) * alpha;
 
-    drawTank(ctx, tank, renderX, renderAngle);
+    drawTank(ctx, tank, renderX, renderY, renderAngle);
 
     ctx.fillStyle = 'black';
     ctx.font = '18px sans-serif';

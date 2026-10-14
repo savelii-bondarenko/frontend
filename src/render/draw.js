@@ -1,7 +1,7 @@
-export function drawTank(ctx, tank, x, angle) {
+export function drawTank(ctx, tank, x, y, angle) {
     ctx.save();
 
-    ctx.translate(x + tank.width / 2, tank.y + tank.height / 2);
+    ctx.translate(x + tank.width / 2, y + tank.height / 2);
     ctx.rotate(angle);
 
     const left = -tank.width / 2;

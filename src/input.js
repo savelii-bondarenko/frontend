@@ -2,7 +2,12 @@ export function createInput(target) {
     const down = new Set();
 
     target.addEventListener('keydown', function (event) {
-        if (event.code === 'ArrowRight' || event.code === 'ArrowLeft') {
+        if (
+            event.code === 'ArrowRight' ||
+            event.code === 'ArrowLeft' ||
+            event.code === 'ArrowUp' ||
+            event.code === 'ArrowDown'
+        ) {
             event.preventDefault();
             down.add(event.code);
         }
