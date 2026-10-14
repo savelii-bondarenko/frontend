@@ -1,7 +1,8 @@
-import { drawTank } from './render/draw';
+import { drawTank } from './render/draw.js';
 import { integrate } from './sim/tank.js';
 import { createInput } from './input.js';
 import { wrapTank } from './sim/arena.js';
+import { createLoop } from './loop.js';
 import './style.css';
 
 const canvas = document.querySelector('#game');
@@ -23,26 +24,12 @@ let previousX = tank.x;
 let previousY = tank.y;
 let previousAngle = tank.angle;
 
-let lastTime = null;
-
-let frameCount = 0;
-let elapsedTime = 0;
-let fps = 0;
-
-const ONE_SECOND = 1000;
-
-const STEP = 1 / 60;
-
-let accumulator = 0;
-let stepCount = 0;
-let stepsPerSecond = 0;
-
-function simulate() {
+function simulate(step) {
     previousX = tank.x;
     previousY = tank.y;
     previousAngle = tank.angle;
 
-    integrate(tank, input, STEP);
+    integrate(tank, input, step);
 
     const wrapped = wrapTank(tank, canvas.width, canvas.height);
 
@@ -52,39 +39,9 @@ function simulate() {
     }
 }
 
-function frame(now) {
-    frameCount++;
+function render(alpha, stats) {
+    const { frameTime, fps, stepsPerSecond } = stats;
 
-    const frameTime = lastTime === null ? 0 : now - lastTime;
-    lastTime = now;
-
-    accumulator += Math.min(frameTime / ONE_SECOND, 0.25);
-
-    while (accumulator >= STEP) {
-        simulate();
-
-        stepCount++;
-        accumulator -= STEP;
-    }
-
-    elapsedTime += frameTime;
-
-    if (elapsedTime >= ONE_SECOND) {
-        fps = (frameCount * ONE_SECOND) / elapsedTime;
-        stepsPerSecond = (stepCount * ONE_SECOND) / elapsedTime;
-
-        frameCount = 0;
-        elapsedTime = 0;
-        stepCount = 0;
-    }
-
-    const alpha = accumulator / STEP;
-    render(alpha, frameTime);
-
-    requestAnimationFrame(frame);
-}
-
-function render(alpha, frameTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const renderX = previousX + (tank.x - previousX) * alpha;
@@ -100,4 +57,9 @@ function render(alpha, frameTime) {
     ctx.fillText(`Steps/s: ${stepsPerSecond.toFixed(0)}`, 10, 75);
 }
 
-requestAnimationFrame(frame);
+const loop = createLoop({
+    simulate,
+    render,
+});
+
+loop.start();
