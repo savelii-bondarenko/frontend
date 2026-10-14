@@ -1,10 +1,12 @@
 import { drawTank } from './render/draw';
 import { integrate } from './sim/tank.js';
-
+import { createInput } from './input.js';
 import './style.css';
 
 const canvas = document.querySelector('#game');
 export const ctx = canvas.getContext('2d');
+
+const input = createInput(window);
 
 export const tank = {
     x: 100,
@@ -32,8 +34,8 @@ let stepsPerSecond = 0;
 
 function simulate() {
     previousX = tank.x;
-    
-    integrate(tank, dt);
+
+    integrate(tank, input, STEP);
 
     if (tank.x > canvas.width) {
         tank.x = -tank.width;

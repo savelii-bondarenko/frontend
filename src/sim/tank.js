@@ -1,3 +1,5 @@
-export function integrate(tank, step) {
-  tank.x += tank.speed * step;
+export function integrate(tank, input, step) {
+    if (input.isDown('ArrowRight')) {
+        tank.x += tank.speed * step;
+    }
 }

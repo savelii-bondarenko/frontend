@@ -1,4 +1,5 @@
-export function drawTank(ctx, tank, x) { //x isn`t straight tank coordinate, it`s interpolated coord
+export function drawTank(ctx, tank, x) {
+    //x isn`t straight tank coordinate, it`s interpolated coord
     ctx.fillStyle = '#333333';
     ctx.fillRect(x, tank.y - 8, tank.width, 10);
     ctx.fillRect(x, tank.y + tank.height - 2, tank.width, 10);
