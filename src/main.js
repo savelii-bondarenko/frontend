@@ -8,6 +8,7 @@ const tank = {
     y: 100,
     width: 60,
     height: 40,
+    speed: 120
 };
 
 function drawTank() {
@@ -39,6 +40,14 @@ let accumulator = 0;
 let stepCount = 0;
 let stepsPerSecond = 0;
 
+function simulate() {
+    tank.x += tank.speed * STEP;
+
+    if (tank.x > canvas.width) {
+        tank.x = -tank.width;
+    }
+}
+
 function frame(now) {
     frameCount++;
 
@@ -48,6 +57,8 @@ function frame(now) {
     accumulator += Math.min(frameTime / ONE_SECOND, 0.25);
 
     while (accumulator >= STEP) {
+        simulate();
+
         stepCount++;
         accumulator -= STEP;
     }
