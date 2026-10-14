@@ -11,19 +11,21 @@ const tank = {
     speed: 120
 };
 
-function drawTank() {
+let previousX = tank.x;
+
+function drawTank(x) {
     ctx.fillStyle = '#333333';
-    ctx.fillRect(tank.x, tank.y - 8, tank.width, 10);
-    ctx.fillRect(tank.x, tank.y + tank.height - 2, tank.width, 10);
+    ctx.fillRect(x, tank.y - 8, tank.width, 10);
+    ctx.fillRect(x, tank.y + tank.height - 2, tank.width, 10);
 
     ctx.fillStyle = 'green';
-    ctx.fillRect(tank.x, tank.y, tank.width, tank.height);
+    ctx.fillRect(x, tank.y, tank.width, tank.height);
 
     ctx.fillStyle = 'darkgreen';
-    ctx.fillRect(tank.x + 20, tank.y + 10, 20, 20);
+    ctx.fillRect(x + 20, tank.y + 10, 20, 20);
 
     ctx.fillStyle = 'black';
-    ctx.fillRect(tank.x + 35, tank.y + 17, 40, 6);
+    ctx.fillRect(x + 35, tank.y + 17, 40, 6);
 }
 
 let lastTime = null;
@@ -41,10 +43,12 @@ let stepCount = 0;
 let stepsPerSecond = 0;
 
 function simulate() {
+    previousX = tank.x;
     tank.x += tank.speed * STEP;
 
     if (tank.x > canvas.width) {
         tank.x = -tank.width;
+        previousX = tank.x;
     }
 }
 
@@ -75,7 +79,11 @@ function frame(now) {
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawTank();
+
+    const alpha = accumulator / STEP;
+    const renderX = previousX + (tank.x - previousX) * alpha;
+
+    drawTank(renderX);
 
     ctx.fillStyle = 'black';
     ctx.font = '18px sans-serif';
