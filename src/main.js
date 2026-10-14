@@ -25,6 +25,12 @@ let previousY = tank.y;
 let previousAngle = tank.angle;
 
 function simulate(step) {
+    if (input.justPressed('KeyR')) {
+        tank.x = 100;
+        tank.y = 100;
+        tank.angle = 0;
+    }
+
     previousX = tank.x;
     previousY = tank.y;
     previousAngle = tank.angle;
