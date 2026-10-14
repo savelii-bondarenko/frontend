@@ -15,9 +15,11 @@ export const tank = {
     height: 40,
     speed: 120,
     angle: 0,
+    turnSpeed: Math.PI,
 };
 
 let previousX = tank.x;
+let previousAngle = tank.angle;
 
 let lastTime = null;
 
@@ -35,6 +37,7 @@ let stepsPerSecond = 0;
 
 function simulate() {
     previousX = tank.x;
+    previousAngle = tank.angle;
 
     integrate(tank, input, STEP);
 
@@ -79,8 +82,9 @@ function frame(now) {
 
     const alpha = accumulator / STEP;
     const renderX = previousX + (tank.x - previousX) * alpha;
+    const renderAngle = previousAngle + (tank.angle - previousAngle) * alpha;
 
-    drawTank(ctx, tank, renderX);
+    drawTank(ctx, tank, renderX, renderAngle);
 
     ctx.fillStyle = 'black';
     ctx.font = '18px sans-serif';
