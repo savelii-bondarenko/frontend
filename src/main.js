@@ -1,32 +1,18 @@
+import { drawTank } from './render/draw';
 import './style.css';
 
 const canvas = document.querySelector('#game');
-const ctx = canvas.getContext('2d');
+export const ctx = canvas.getContext('2d');
 
-const tank = {
+export const tank = {
     x: 100,
     y: 100,
     width: 60,
     height: 40,
-    speed: 120
+    speed: 120,
 };
 
 let previousX = tank.x;
-
-function drawTank(x) {
-    ctx.fillStyle = '#333333';
-    ctx.fillRect(x, tank.y - 8, tank.width, 10);
-    ctx.fillRect(x, tank.y + tank.height - 2, tank.width, 10);
-
-    ctx.fillStyle = 'green';
-    ctx.fillRect(x, tank.y, tank.width, tank.height);
-
-    ctx.fillStyle = 'darkgreen';
-    ctx.fillRect(x + 20, tank.y + 10, 20, 20);
-
-    ctx.fillStyle = 'black';
-    ctx.fillRect(x + 35, tank.y + 17, 40, 6);
-}
 
 let lastTime = null;
 
@@ -70,8 +56,8 @@ function frame(now) {
     elapsedTime += frameTime;
 
     if (elapsedTime >= ONE_SECOND) {
-        fps = frameCount * ONE_SECOND / elapsedTime;
-        stepsPerSecond = stepCount * ONE_SECOND / elapsedTime;
+        fps = (frameCount * ONE_SECOND) / elapsedTime;
+        stepsPerSecond = (stepCount * ONE_SECOND) / elapsedTime;
 
         frameCount = 0;
         elapsedTime = 0;
@@ -83,7 +69,7 @@ function frame(now) {
     const alpha = accumulator / STEP;
     const renderX = previousX + (tank.x - previousX) * alpha;
 
-    drawTank(renderX);
+    drawTank(ctx, tank, renderX);
 
     ctx.fillStyle = 'black';
     ctx.font = '18px sans-serif';
