@@ -1,4 +1,6 @@
 import { drawTank } from './render/draw';
+import { integrate } from './sim/tank.js';
+
 import './style.css';
 
 const canvas = document.querySelector('#game');
@@ -30,7 +32,8 @@ let stepsPerSecond = 0;
 
 function simulate() {
     previousX = tank.x;
-    tank.x += tank.speed * STEP;
+    
+    integrate(tank, dt);
 
     if (tank.x > canvas.width) {
         tank.x = -tank.width;
