@@ -1,10 +1,10 @@
-export function integrate(tank, input, dt) {
+export function integrate(tank, input, step) {
     if (input.isDown('ArrowLeft')) {
-        tank.angle -= tank.turnSpeed * dt;
+        tank.angle -= tank.turnSpeed * step;
     }
 
     if (input.isDown('ArrowRight')) {
-        tank.angle += tank.turnSpeed * dt;
+        tank.angle += tank.turnSpeed * step;
     }
 
     let direction = 0;
@@ -17,7 +17,7 @@ export function integrate(tank, input, dt) {
         direction -= 1;
     }
 
-    const distance = tank.speed * direction * dt;
+    const distance = tank.speed * direction * step;
 
     tank.x += Math.cos(tank.angle) * distance;
     tank.y += Math.sin(tank.angle) * distance;

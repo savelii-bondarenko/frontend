@@ -1,6 +1,7 @@
 import { drawTank } from './render/draw';
 import { integrate } from './sim/tank.js';
 import { createInput } from './input.js';
+import { wrapTank } from './sim/arena.js';
 import './style.css';
 
 const canvas = document.querySelector('#game');
@@ -37,31 +38,18 @@ let stepCount = 0;
 let stepsPerSecond = 0;
 
 function simulate() {
+  previousX = tank.x;
+  previousY = tank.y;
+  previousAngle = tank.angle;
+
+  integrate(tank, input, STEP);
+
+  const wrapped = wrapTank(tank, canvas.width, canvas.height);
+
+  if (wrapped) {
     previousX = tank.x;
     previousY = tank.y;
-    previousAngle = tank.angle;
-
-    integrate(tank, input, STEP);
-
-    if (tank.x > canvas.width) {
-        tank.x = -tank.width;
-        previousX = tank.x;
-    }
-
-    if (tank.x + tank.width < 0) {
-        tank.x = canvas.width;
-        previousX = tank.x;
-    }
-
-    if (tank.y > canvas.height) {
-        tank.y = -tank.height;
-        previousY = tank.y;
-    }
-
-    if (tank.y + tank.height < 0) {
-        tank.y = canvas.height;
-        previousY = tank.y;
-    }
+  }
 }
 
 function frame(now) {
