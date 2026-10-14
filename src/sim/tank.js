@@ -1,24 +1,41 @@
-export function integrate(tank, input, step) {
+export function integrate(tank, input, dt) {
     if (input.isDown('ArrowLeft')) {
-        tank.angle -= tank.turnSpeed * step;
+        tank.angle -= tank.turnSpeed * dt;
     }
 
     if (input.isDown('ArrowRight')) {
-        tank.angle += tank.turnSpeed * step;
+        tank.angle += tank.turnSpeed * dt;
     }
 
-    let direction = 0;
+    tank.thrust = 0;
 
     if (input.isDown('ArrowUp')) {
-        direction += 1;
+        tank.thrust += 1;
     }
 
     if (input.isDown('ArrowDown')) {
-        direction -= 1;
+        tank.thrust -= 1;
     }
 
-    const distance = tank.speed * direction * step;
+    const acceleration = tank.acceleration * tank.thrust;
 
-    tank.x += Math.cos(tank.angle) * distance;
-    tank.y += Math.sin(tank.angle) * distance;
+    tank.vx += Math.cos(tank.angle) * acceleration * dt;
+    tank.vy += Math.sin(tank.angle) * acceleration * dt;
+
+    const damping = Math.exp(-tank.drag * dt);
+
+    tank.vx *= damping;
+    tank.vy *= damping;
+
+    const speed = Math.hypot(tank.vx, tank.vy);
+
+    if (speed > tank.maxSpeed) {
+        const scale = tank.maxSpeed / speed;
+
+        tank.vx *= scale;
+        tank.vy *= scale;
+    }
+
+    tank.x += tank.vx * dt;
+    tank.y += tank.vy * dt;
 }

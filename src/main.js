@@ -15,7 +15,12 @@ export const tank = {
     y: 100,
     width: 60,
     height: 40,
-    speed: 120,
+    vx: 0,
+    vy: 0,
+    thrust: 0,
+    acceleration: 500,
+    drag: 2,
+    maxSpeed: 180,
     angle: 0,
     turnSpeed: Math.PI,
 };
@@ -29,6 +34,9 @@ function simulate(step) {
         tank.x = 100;
         tank.y = 100;
         tank.angle = 0;
+        tank.vx = 0;
+        tank.vy = 0;
+        tank.thrust = 0;
     }
 
     previousX = tank.x;
