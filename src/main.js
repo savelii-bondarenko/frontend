@@ -1,12 +1,14 @@
-import { drawTank } from './render/draw.js';
+import { drawTank, drawGrid } from './render/draw.js';
 import { integrate } from './sim/tank.js';
 import { createInput } from './input.js';
 import { wrapTank } from './sim/arena.js';
 import { createLoop } from './loop.js';
+import { createCanvas } from './render/canvas.js';
 import './style.css';
 
 const canvas = document.querySelector('#game');
-export const ctx = canvas.getContext('2d');
+const view = createCanvas(canvas);
+const ctx = view.ctx;
 
 const input = createInput(window);
 
@@ -45,7 +47,7 @@ function simulate(step) {
 
     integrate(tank, input, step);
 
-    const wrapped = wrapTank(tank, canvas.width, canvas.height);
+    const wrapped = wrapTank(tank, view.width, view.height);
 
     if (wrapped) {
         previousX = tank.x;
@@ -54,9 +56,11 @@ function simulate(step) {
 }
 
 function render(alpha, stats) {
+    view.resize();
     const { frameTime, fps, stepsPerSecond } = stats;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, view.width, view.height);
+    drawGrid(ctx, view.width, view.height);
 
     const renderX = previousX + (tank.x - previousX) * alpha;
     const renderY = previousY + (tank.y - previousY) * alpha;

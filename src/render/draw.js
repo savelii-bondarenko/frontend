@@ -26,3 +26,29 @@ export function drawTank(ctx, tank, x, y, angle) {
 
     ctx.restore();
 }
+
+export function drawGrid(ctx, width, height) {
+    const cellSize = 50;
+
+    ctx.save();
+
+    ctx.fillStyle = '#f3f4f6';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = '#d1d5db';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+
+    for (let x = 0; x <= width; x += cellSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+    }
+
+    for (let y = 0; y <= height; y += cellSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+    }
+
+    ctx.stroke();
+    ctx.restore();
+}
