@@ -38,18 +38,18 @@ let stepCount = 0;
 let stepsPerSecond = 0;
 
 function simulate() {
-  previousX = tank.x;
-  previousY = tank.y;
-  previousAngle = tank.angle;
-
-  integrate(tank, input, STEP);
-
-  const wrapped = wrapTank(tank, canvas.width, canvas.height);
-
-  if (wrapped) {
     previousX = tank.x;
     previousY = tank.y;
-  }
+    previousAngle = tank.angle;
+
+    integrate(tank, input, STEP);
+
+    const wrapped = wrapTank(tank, canvas.width, canvas.height);
+
+    if (wrapped) {
+        previousX = tank.x;
+        previousY = tank.y;
+    }
 }
 
 function frame(now) {
@@ -78,9 +78,15 @@ function frame(now) {
         stepCount = 0;
     }
 
+    const alpha = accumulator / STEP;
+    render(alpha, frameTime);
+
+    requestAnimationFrame(frame);
+}
+
+function render(alpha, frameTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const alpha = accumulator / STEP;
     const renderX = previousX + (tank.x - previousX) * alpha;
     const renderY = previousY + (tank.y - previousY) * alpha;
     const renderAngle = previousAngle + (tank.angle - previousAngle) * alpha;
@@ -90,10 +96,8 @@ function frame(now) {
     ctx.fillStyle = 'black';
     ctx.font = '18px sans-serif';
     ctx.fillText(`Frame: ${frameTime.toFixed(2)} ms`, 10, 25);
-    ctx.fillText(`FPS: ${fps.toFixed(2)}`, 10, 50);
+    ctx.fillText(`FPS: ${fps.toFixed(0)}`, 10, 50);
     ctx.fillText(`Steps/s: ${stepsPerSecond.toFixed(0)}`, 10, 75);
-
-    requestAnimationFrame(frame);
 }
 
 requestAnimationFrame(frame);
