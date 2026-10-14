@@ -6,6 +6,16 @@ export function createLoop({ step = 1 / 60, simulate, render }) {
     let requestId = null;
     let running = false;
 
+    let stepCount = 0;
+    let frameCount = 0;
+    let sampleTime = 0;
+
+    const stats = {
+        stepsPerSecond: 0,
+        framesPerSecond: 0,
+        frameTime: 0,
+    };
+
     function frame(now) {
         if (!running) {
             return;
@@ -15,17 +25,35 @@ export function createLoop({ step = 1 / 60, simulate, render }) {
             lastTime = now;
         }
 
-        const frameDelta = Math.min((now - lastTime) / 1000, MAX_FRAME_DELTA);
+        const realDelta = (now - lastTime) / 1000;
+        const frameDelta = Math.min(realDelta, MAX_FRAME_DELTA);
 
         lastTime = now;
         accumulator += frameDelta;
 
+        stats.frameTime = realDelta * 1000;
+        sampleTime += realDelta;
+
+        if (realDelta > 0) {
+            frameCount++;
+        }
+
         while (accumulator >= step) {
             simulate(step);
             accumulator -= step;
+            stepCount += 1;
         }
 
-        render(accumulator / step);
+        if (sampleTime >= 1) {
+            stats.stepsPerSecond = stepCount / sampleTime;
+            stats.framesPerSecond = frameCount / sampleTime;
+
+            stepCount = 0;
+            frameCount = 0;
+            sampleTime = 0;
+        }
+
+        render(accumulator / step, stats);
 
         if (running) {
             requestId = requestAnimationFrame(frame);
@@ -39,8 +67,15 @@ export function createLoop({ step = 1 / 60, simulate, render }) {
 
         accumulator = 0;
         lastTime = null;
-        running = true;
+        stepCount = 0;
+        frameCount = 0;
+        sampleTime = 0;
 
+        stats.stepsPerSecond = 0;
+        stats.framesPerSecond = 0;
+        stats.frameTime = 0;
+
+        running = true;
         requestId = requestAnimationFrame(frame);
     }
 
@@ -53,5 +88,5 @@ export function createLoop({ step = 1 / 60, simulate, render }) {
         }
     }
 
-    return { start, stop };
+    return { start, stop, stats };
 }
